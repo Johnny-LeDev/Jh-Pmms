@@ -13,7 +13,7 @@ This is a complete rework of the **PMMS FiveM** script, bringing a fresh new des
 ## Installation
 1. Download the latest version of **PMMS FiveM Rework**.
 2. Extract the folder and place it in your FiveM resources directory.
-3. Add `start pmms_rework` to your `server.cfg`.
+3. Add `start Jh-Pmms` to your `server.cfg`.
 4. Restart your server and enjoy!
 
 ## Configuration
