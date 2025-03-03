@@ -23,7 +23,7 @@ Edit the `config.lua` file to customize:
 - Allowed audio sources
 
 ## Credits
-Developed by [Your Name] with contributions from the FiveM community.
+Developed by https://github.com/kibook/pmms with contributions from the FiveM community.
 
 ## License
 This project is under the [MIT License](LICENSE).
