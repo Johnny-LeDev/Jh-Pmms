@@ -938,7 +938,6 @@ function updateUi(data) {
 		var volumeInput = document.getElementById('volume');
 		var offsetInput = document.getElementById('offset');
 		var loopCheckbox = document.getElementById('loop');
-		var filterCheckbox = document.getElementById('filter');
 		var lockedCheckbox = document.getElementById('locked');
 		var videoCheckbox = document.getElementById('video');
 		var videoSizeInput = document.getElementById('video-size');
@@ -1007,7 +1006,6 @@ function updateUi(data) {
 			volumeInput.disabled = true;
 			offsetInput.disabled = true;
 			loopCheckbox.disabled = true;
-			filterCheckbox.disabled = true;
 			lockedCheckbox.disabled = true;
 			visualizationSelect.disabled = true;
 			sameRoomAttenuationInput.disabled = true;
@@ -1244,7 +1242,6 @@ function startMediaPlayer() {
 	var volumeInput = document.getElementById('volume');
 	var offsetInput = document.getElementById('offset');
 	var loopCheckbox = document.getElementById('loop');
-	var filterCheckbox = document.getElementById('filter');
 	var lockedCheckbox = document.getElementById('locked');
 	var videoCheckbox = document.getElementById('video');
 	var videoSizeInput = document.getElementById('video-size');
