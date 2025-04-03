@@ -10,13 +10,5 @@ local ESX = exports["es_extended"]:getSharedObject();
 Permissions = {};
 
 function Permissions:check(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
-    if (not xPlayer) then
-        return false;
-    end
-    if (xPlayer.getGroup() == "superadmin") then
-        return true;
-    else
-        return false;
-    end
+    return true;
 end

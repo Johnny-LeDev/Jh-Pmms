@@ -5,6 +5,8 @@
 ---- File: [client.lua]
 ----
 
+local ESX = exports["es_extended"]:getSharedObject();
+
 local mediaPlayers = {}
 local localMediaPlayers = {}
 
@@ -53,18 +55,7 @@ local function notify(args)
 		args = {}
 	end
 
-	if not args.title then
-		args.title = GetCurrentResourceName()
-	end
-
-	if not args.duration then
-		args.duration = Config.notificationDuration;
-	end
-
-	SendNUIMessage({
-		type = "showNotification",
-		args = args
-	})
+	ESX.ShowNotification(args.text);
 end
 
 local function doesEntityExist(entity)
@@ -318,7 +309,7 @@ local function startClosestMediaPlayer(options)
 
 	if not mediaPlayer then
 		if Config.showNotifications then
-			notify{text = "No media player nearby"}
+			notify{text = "~r~Erreur~s~  Aucun lecteur à proximité"}
 		end
 
 		return
@@ -336,7 +327,7 @@ local function pauseClosestMediaPlayer()
 
 	if not mediaPlayer then
 		if Config.showNotifications then
-			notify{text = "No media player nearby"}
+			notify{text = "~r~Erreur~s~  Aucun lecteur à proximité"}
 		end
 
 		return
@@ -354,7 +345,7 @@ local function stopClosestMediaPlayer()
 
 	if not mediaPlayer then
 		if Config.showNotifications then
-			notify{text = "No media player nearby"}
+			notify{text = "~r~Erreur~s~  Aucun lecteur à proximité"}
 		end
 
 		return
@@ -424,7 +415,7 @@ local function listPresets()
 	end
 
 	if #presets == 0 then
-		notify{text = "No presets available"}
+		notify{text = "Aucun préréglage disponible"}
 	else
 		table.sort(presets)
 
@@ -755,7 +746,7 @@ local function sendMediaMessage(handle, coords, data)
 			mediaPos = data.options.coords
 		end
 
-		if mediaPos and (model or scaleform) then
+		if mediaPos and (model or scaleform) and data.options then
 			local ped, listenPos, viewerPos, viewerFov = getListenerAndViewerInfo()
 
 			if #(viewerPos - mediaPos) < (data.range or Config.maxRange) then
@@ -1360,10 +1351,8 @@ AddEventHandler("pmms:init", function(handle, options)
 end)
 
 AddEventHandler("pmms:reset", function()
-	print("Resetting...")
-
 	if Config.showNotifications then
-		notify{text = "Resetting..."}
+		notify{text = "Réinitialisation..."}
 	end
 
 	syncIsEnabled = false
@@ -1460,37 +1449,6 @@ Citizen.CreateThread(function()
 	if Config.autoDisableStaticEmitters then
 		restoreStaticEmitters()
 	end
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix, "Open the media player control panel.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "play", "Play something on the closest media player.", {
-		{name = "url", help = "URL or preset name of music to play. Use \"random\" to play a random preset."},
-		{name = "options", help = "-filter, -nofilter, -loop, -offset, -lock, -video, -size <value>, -mute, -sra <value>, -dra <value>, -drv <value>, -range <value>, -veh, -notveh, -visualization <value>, -volume <value>"}
-	})
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "pause", "Pause the closest media player.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "stop", "Stop the closest media player.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "status", "Show/hide the status of the closest media player.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "presets", "List available presets.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "vol", "Adjust the base volume of all media players.", {
-		{name = "volume", help = "0-100"}
-	})
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "add", "Add or modify a media player model preset.", {
-		{name = "model", help = "The name of the entity model"},
-		{name = "label", help = "The label that appears for this model in the UI"},
-		{name = "renderTarget", help = "An optional name of a render target for this model"}
-	})
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "fix", "Reset all media players to fix issues.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "ctl", "Advanced media player control.")
-
-	TriggerEvent("chat:addSuggestion", "/" .. Config.commandPrefix .. Config.commandSeparator .. "refresh_perms", "Refresh permissions for all clients.")
 end)
 
 Citizen.CreateThread(function()

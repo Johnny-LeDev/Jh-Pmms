@@ -5,6 +5,8 @@
 ---- File: [server.lua]
 ----
 
+local ESX = exports["es_extended"]:getSharedObject();
+
 local mediaPlayers = {}
 local restrictedHandles = {}
 local syncQueue = {}
@@ -259,7 +261,10 @@ local function startMediaPlayerScaleform(scaleform, options)
 end
 
 local function errorMessage(player, message)
-	TriggerClientEvent("pmms:error", player, message)
+	local xPlayer = ESX.GetPlayerFromId(player)
+	if (xPlayer) then
+		xPlayer.showNotification(message)
+	end
 end
 
 local function startDefaultMediaPlayers()
@@ -616,6 +621,7 @@ exports("getAllMediaPlayers", getAllMediaPlayers)
 
 AddEventHandler("pmms:start", function(handle, options)
 	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not (options and options.url) then
 		errorMessage(source, "Vous devez spécifier une URL pour lire.")
 		return
@@ -638,8 +644,9 @@ AddEventHandler("pmms:start", function(handle, options)
 		addToQueue(handle, source, options)
 	else
 		local source = source
+		local xPlayer = ESX.GetPlayerFromId(source)
 		if (locked or isLockedDefaultMediaPlayer(handle)) and not Permissions:check(source) then
-			errorMessage(source, "Vous n'avez pas la permission de lire sur un lecteur multimédia verrouillé.")
+			errorMessage(source, "Vous n'avez pas la permission de lire sur un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 			return
 		end
 
@@ -660,7 +667,7 @@ AddEventHandler("pmms:start", function(handle, options)
 
 				TriggerClientEvent("pmms:start", source, handle, options)
 			else
-				errorMessage(source, "Vous n'avez pas la permission de lire l'URL spécifiée.")
+				errorMessage(source, "Vous n'avez pas la permission de lire l'URL spécifiée. Cette fonction est réservée aux VIP.")
 			end
 		else
 			errorMessage(source, "Vous devez acheter le VIP pour lire l'URL.")
@@ -674,9 +681,9 @@ AddEventHandler("pmms:init", function(handle, options)
 	end
 
 	local source = source
-
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if (locked or isLockedDefaultMediaPlayer(handle)) and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de lire sur un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de lire sur un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -694,7 +701,7 @@ AddEventHandler("pmms:pause", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
 		errorMessage(source, "You do not have permission to pause or resume locked media players")
 		return
@@ -709,9 +716,9 @@ AddEventHandler("pmms:stop", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de mettre en pause ou de reprendre un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de mettre en pause ou de reprendre un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -732,9 +739,9 @@ AddEventHandler("pmms:setVolume", function(handle, volume)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier le volume d'un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier le volume d'un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -747,9 +754,9 @@ AddEventHandler("pmms:setAttenuation", function(handle, sameRoom, diffRoom)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier l'atténuation d'un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier l'atténuation d'un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -765,9 +772,9 @@ AddEventHandler("pmms:setDiffRoomVolume", function(handle, diffRoomVolume)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier le volume d'un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier le volume d'un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -780,9 +787,9 @@ AddEventHandler("pmms:setRange", function(handle, range)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier la portée d'un lecteur multimédia verrouillé.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier la portée d'un lecteur multimédia verrouillé. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -795,9 +802,9 @@ AddEventHandler("pmms:setIsVehicle", function(handle, isVehicle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres du véhicule des lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres du véhicule des lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -810,9 +817,9 @@ AddEventHandler("pmms:setScaleform", function(handle, scaleform)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres du scaleform des lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres du scaleform des lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -836,9 +843,9 @@ AddEventHandler("pmms:setStartTime", function(handle, time)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de chercher sur les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de chercher sur les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -851,9 +858,9 @@ AddEventHandler("pmms:lock", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de verrouiller un lecteur multimédia.")
+		errorMessage(source, "Vous n'avez pas la permission de verrouiller un lecteur multimédia. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -866,9 +873,9 @@ AddEventHandler("pmms:unlock", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de déverrouiller un lecteur multimédia.")
+		errorMessage(source, "Vous n'avez pas la permission de déverrouiller un lecteur multimédia. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -881,9 +888,9 @@ AddEventHandler("pmms:enableVideo", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission d'activer la vidéo sur les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission d'activer la vidéo sur les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -896,9 +903,9 @@ AddEventHandler("pmms:disableVideo", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de désactiver la vidéo sur les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de désactiver la vidéo sur les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -911,9 +918,9 @@ AddEventHandler("pmms:setVideoSize", function(handle, size)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier la taille de la vidéo sur les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier la taille de la vidéo sur les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -926,9 +933,9 @@ AddEventHandler("pmms:mute", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de couper le son des lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de couper le son des lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -941,9 +948,9 @@ AddEventHandler("pmms:unmute", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de mettre en sourdine les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de mettre en sourdine les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -956,9 +963,9 @@ AddEventHandler("pmms:copy", function(oldHandle, newHandle, newCoords)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[oldHandle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de copier les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de copier les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -971,9 +978,9 @@ AddEventHandler("pmms:setLoop", function(handle, loop)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres de boucle des lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de modifier les paramètres de boucle des lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -986,9 +993,9 @@ AddEventHandler("pmms:next", function(handle)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de sauter en avant sur les lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de sauter en avant sur les lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1001,9 +1008,9 @@ AddEventHandler("pmms:removeFromQueue", function(handle, id)
 	end
 
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if mediaPlayers[handle].locked and not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de retirer un élément de la file d'attente des lecteurs multimédia verrouillés.")
+		errorMessage(source, "Vous n'avez pas la permission de retirer un élément de la file d'attente des lecteurs multimédia verrouillés. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1012,9 +1019,9 @@ end)
 
 AddEventHandler("pmms:saveModel", function(model, data)
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission d'enregistrer les paramètres par défaut du modèle sur le serveur.")
+		errorMessage(source, "Vous n'avez pas la permission d'enregistrer les paramètres par défaut du modèle sur le serveur. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1025,9 +1032,9 @@ end)
 
 AddEventHandler("pmms:saveEntity", function(coords, data)
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission d'enregistrer les paramètres par défaut de l'entité sur le serveur.")
+		errorMessage(source, "Vous n'avez pas la permission d'enregistrer les paramètres par défaut de l'entité sur le serveur. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1038,9 +1045,9 @@ end)
 
 AddEventHandler("pmms:deleteModel", function(model)
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de supprimer les paramètres par défaut du modèle du serveur.")
+		errorMessage(source, "Vous n'avez pas la permission de supprimer les paramètres par défaut du modèle du serveur. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1057,9 +1064,9 @@ end)
 
 AddEventHandler("pmms:deleteEntity", function(coords)
 	local source = source
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	if not Permissions:check(source) then
-		errorMessage(source, "Vous n'avez pas la permission de supprimer les paramètres par défaut de l'entité du serveur.")
+		errorMessage(source, "Vous n'avez pas la permission de supprimer les paramètres par défaut de l'entité du serveur. Cette fonction est réservée aux VIP.")
 		return
 	end
 
@@ -1081,7 +1088,7 @@ end)
 AddEventHandler("pmms:loadPermissions", function()
 	local source = source
 	local permissions = {}
-	
+	local xPlayer = ESX.GetPlayerFromId(source)
 	
 	if (xPlayer) then
 		permissions.interact  = true
@@ -1195,10 +1202,6 @@ end, true)
 
 RegisterCommand(Config.commandPrefix .. Config.commandSeparator .. "stop", function(source, args, raw)
 	TriggerClientEvent("pmms:stopClosestMediaPlayer", source)
-end, true)
-
-RegisterCommand(Config.commandPrefix .. Config.commandSeparator .. "status", function(source, args, raw)
-	TriggerClientEvent("pmms:toggleStatus", source)
 end, true)
 
 RegisterCommand(Config.commandPrefix .. Config.commandSeparator .. "vol", function(source, args, raw)
